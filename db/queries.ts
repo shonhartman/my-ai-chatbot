@@ -17,6 +17,8 @@ import {
   vote,
 } from './schema';
 
+console.log('process.env.POSTGRES_URL', process.env.POSTGRES_URL);
+
 // Optionally, if not using email/pass login, you can
 // use the Drizzle adapter for Auth.js / NextAuth
 // https://authjs.dev/reference/adapter/drizzle
@@ -33,6 +35,7 @@ export async function getUser(email: string): Promise<Array<User>> {
 }
 
 export async function createUser(email: string, password: string) {
+  console.log('creating user in database::::::::::', email, password);
   let salt = genSaltSync(10);
   let hash = hashSync(password, salt);
 

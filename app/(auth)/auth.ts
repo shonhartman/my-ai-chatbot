@@ -21,10 +21,25 @@ export const {
     Credentials({
       credentials: {},
       async authorize({ email, password }: any) {
-        let users = await getUser(email);
-        if (users.length === 0) return null;
-        let passwordsMatch = await compare(password, users[0].password!);
-        if (passwordsMatch) return users[0] as any;
+        try {
+          let users = await getUser(email);
+          console.log('Found users:', users.length);
+          
+          if (users.length === 0) {
+            console.log('No user found with email:', email);
+            return null;
+          }
+          
+          let passwordsMatch = await compare(password, users[0].password!);
+          console.log('Password match result:', passwordsMatch);
+          
+          if (passwordsMatch) return users[0] as any;
+          console.log('Password did not match');
+          return null;
+        } catch (error) {
+          console.error('Error in authorize:', error);
+          return null;
+        }
       },
     }),
   ],
