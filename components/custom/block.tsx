@@ -60,6 +60,7 @@ export function Block({
   messages,
   setMessages,
   votes,
+  personaId,
 }: {
   chatId: string;
   input: string;
@@ -73,6 +74,7 @@ export function Block({
   messages: Array<Message>;
   setMessages: Dispatch<SetStateAction<Array<Message>>>;
   votes: Array<Vote> | undefined;
+  personaId?: string;
   append: (
     message: Message | CreateMessage,
     chatRequestOptions?: ChatRequestOptions
@@ -295,6 +297,7 @@ export function Block({
                   chatId={chatId}
                   key={message.id}
                   message={message}
+                  personaId={personaId ?? 'estherPerel'}
                   block={block}
                   setBlock={setBlock}
                   isLoading={isLoading && index === messages.length - 1}

@@ -22,10 +22,12 @@ export function Chat({
   id,
   initialMessages,
   selectedModelId,
+  personaId,
 }: {
   id: string;
   initialMessages: Array<Message>;
   selectedModelId: string;
+  personaId: string;
 }) {
   const { mutate } = useSWRConfig();
 
@@ -40,7 +42,7 @@ export function Chat({
     stop,
     data: streamingData,
   } = useChat({
-    body: { id, modelId: selectedModelId },
+    body: { id, modelId: selectedModelId, personaId },
     initialMessages,
     onFinish: () => {
       mutate('/api/history');
@@ -97,6 +99,7 @@ export function Chat({
                   ? votes.find((vote) => vote.messageId === message.id)
                   : undefined
               }
+              personaId={personaId}
             />
           ))}
 

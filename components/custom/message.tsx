@@ -16,6 +16,16 @@ import { PreviewAttachment } from './preview-attachment';
 import { VoiceMessage } from './voice-message';
 import { Weather } from './weather';
 
+interface PreviewMessageProps {
+  chatId: string;
+  message: Message;
+  block: UIBlock;
+  setBlock: Dispatch<SetStateAction<UIBlock>>;
+  vote?: Vote;
+  isLoading: boolean;
+  personaId: string;
+}
+
 export const PreviewMessage = ({
   chatId,
   message,
@@ -23,14 +33,8 @@ export const PreviewMessage = ({
   setBlock,
   vote,
   isLoading,
-}: {
-  chatId: string;
-  message: Message;
-  block: UIBlock;
-  setBlock: Dispatch<SetStateAction<UIBlock>>;
-  vote: Vote | undefined;
-  isLoading: boolean;
-}) => {
+  personaId,
+}: PreviewMessageProps) => {
   return (
     <motion.div
       className="w-full mx-auto max-w-3xl px-4 group/message"
@@ -141,7 +145,7 @@ export const PreviewMessage = ({
               isLoading={isLoading}
             />
             {message.role === 'assistant' && (
-              <VoiceMessage message={message} />
+              <VoiceMessage message={message} personaId={personaId} />
             )}
           </div>
         </div>

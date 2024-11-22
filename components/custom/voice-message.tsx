@@ -1,26 +1,41 @@
 import { Message } from 'ai';
 import { useEffect, useState } from 'react';
 
+import { getPersonaById, formatMessageWithEmotion } from '@/lib/personas';
+
 interface VoiceMessageProps {
   message: Message;
-  voiceId?: string;
+  personaId: string;
 }
 
-export function VoiceMessage({ message, voiceId = "r9OYFwT0BjAyZar560fV" }: VoiceMessageProps) {
+export function VoiceMessage({ 
+  message, 
+  personaId, 
+}: VoiceMessageProps) {
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-
-  const generateSpeech = async () => {
+  
+  const persona = getPersonaById(personaId);
+  
+  const generateSpeech = async () => {    
+    if (!persona) return;
+    
     setIsLoading(true);
     try {
+      // Format message with emotional context
+      const formattedMessage = formatMessageWithEmotion(
+        message.content as string, 
+      );
+
       const response = await fetch('/api/voice', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          text: message.content,
-          voiceId
+          text: formattedMessage,
+          voiceId: persona.voiceId,
+          voiceSettings: persona.voiceSettings
         }),
       });
 
@@ -28,8 +43,10 @@ export function VoiceMessage({ message, voiceId = "r9OYFwT0BjAyZar560fV" }: Voic
 
       const audioBlob = await response.blob();
       const audioUrl = URL.createObjectURL(audioBlob);
-      const audio = new Audio(audioUrl);
-      setAudio(audio);
+      const newAudio = new Audio(audioUrl);
+      
+      setAudio(newAudio);
+      newAudio.play();
     } catch (error) {
       console.error('Error generating speech:', error);
     }

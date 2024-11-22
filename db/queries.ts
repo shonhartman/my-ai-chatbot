@@ -17,7 +17,6 @@ import {
   vote,
 } from './schema';
 
-console.log('process.env.POSTGRES_URL', process.env.POSTGRES_URL);
 
 // Optionally, if not using email/pass login, you can
 // use the Drizzle adapter for Auth.js / NextAuth
@@ -35,7 +34,6 @@ export async function getUser(email: string): Promise<Array<User>> {
 }
 
 export async function createUser(email: string, password: string) {
-  console.log('creating user in database::::::::::', email, password);
   let salt = genSaltSync(10);
   let hash = hashSync(password, salt);
 
@@ -51,22 +49,23 @@ export async function saveChat({
   id,
   userId,
   title,
+  personaId,
 }: {
   id: string;
   userId: string;
   title: string;
+  personaId?: string;
 }) {
-  try {
-    return await db.insert(chat).values({
+  return db
+    .insert(chat)
+    .values({
       id,
-      createdAt: new Date(),
       userId,
       title,
-    });
-  } catch (error) {
-    console.error('Failed to save chat in database');
-    throw error;
-  }
+      personaId: personaId,
+      createdAt: new Date(),
+    })
+    .returning();
 }
 
 export async function deleteChatById({ id }: { id: string }) {

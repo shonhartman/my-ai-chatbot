@@ -21,6 +21,7 @@ import {
   saveSuggestions,
 } from '@/db/queries';
 import { Suggestion } from '@/db/schema';
+import { getPersonaById } from '@/lib/personas';
 import {
   generateUUID,
   getMostRecentUserMessage,
@@ -28,6 +29,7 @@ import {
 } from '@/lib/utils';
 
 import { generateTitleFromUserMessage } from '../../actions';
+
 
 export const maxDuration = 60;
 
@@ -48,21 +50,49 @@ const weatherTools: AllowedTools[] = ['getWeather'];
 const allTools: AllowedTools[] = [...blocksTools, ...weatherTools];
 
 export async function POST(request: Request) {
-  const {
-    id,
-    messages,
-    modelId,
-  }: { id: string; messages: Array<Message>; modelId: string } =
-    await request.json();
-
   const session = await auth();
-
   if (!session || !session.user || !session.user.id) {
     return new Response('Unauthorized', { status: 401 });
   }
 
-  const model = models.find((model) => model.id === modelId);
+  const body = await request.json();
 
+  // Handle initial chat creation with persona
+  if ('personaId' in body && !('messages' in body)) {
+    const { personaId, modelId } = body;
+    
+    const model = models.find((model) => model.id === modelId);
+    if (!model) {
+      return new Response('Model not found', { status: 404 });
+    }
+
+    const persona = getPersonaById(personaId);
+    if (!persona) {
+      return new Response('Invalid persona', { status: 400 });
+    }
+
+    const title = await generateTitleFromUserMessage({ 
+      message: {
+        role: 'user',
+        content: `New chat with ${persona.name}`,
+      }
+    });
+
+    const chatId = generateUUID();
+    await saveChat({ 
+      id: chatId, 
+      userId: session.user.id, 
+      title,
+      personaId: persona.id
+    });
+
+    return Response.json({ id: chatId });
+  }
+
+  // Existing message handling code
+  const { id, messages, modelId } = body;
+  
+  const model = models.find((model) => model.id === modelId);
   if (!model) {
     return new Response('Model not found', { status: 404 });
   }
