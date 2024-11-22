@@ -13,6 +13,7 @@ import { SparklesIcon } from './icons';
 import { Markdown } from './markdown';
 import { MessageActions } from './message-actions';
 import { PreviewAttachment } from './preview-attachment';
+import { VoiceMessage } from './voice-message';
 import { Weather } from './weather';
 
 export const PreviewMessage = ({
@@ -131,13 +132,18 @@ export const PreviewMessage = ({
             </div>
           )}
 
-          <MessageActions
-            key={`action-${message.id}`}
-            chatId={chatId}
-            message={message}
-            vote={vote}
-            isLoading={isLoading}
-          />
+          <div className="flex items-center gap-2">
+            <MessageActions
+              key={`action-${message.id}`}
+              chatId={chatId}
+              message={message}
+              vote={vote}
+              isLoading={isLoading}
+            />
+            {message.role === 'assistant' && (
+              <VoiceMessage message={message} />
+            )}
+          </div>
         </div>
       </div>
     </motion.div>
