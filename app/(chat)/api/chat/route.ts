@@ -9,7 +9,6 @@ import { z } from 'zod';
 
 import { customModel } from '@/ai';
 import { models } from '@/ai/models';
-import { systemPrompt } from '@/ai/prompts';
 import { auth } from '@/app/(auth)/auth';
 import {
   deleteChatById,
@@ -105,6 +104,19 @@ export async function POST(request: Request) {
   }
 
   const chat = await getChatById({ id });
+  if (!chat) {
+    return new Response('Chat not found', { status: 404 });
+  }
+
+  // Ensure chat has a persona
+  if (!chat.personaId) {
+    return new Response('Chat has no associated persona', { status: 400 });
+  }
+
+  const persona = getPersonaById(chat.personaId);
+  if (!persona) {
+    return new Response('Invalid persona for chat', { status: 400 });
+  }
 
   if (!chat) {
     const title = await generateTitleFromUserMessage({ message: userMessage });
@@ -121,7 +133,7 @@ export async function POST(request: Request) {
 
   const result = await streamText({
     model: customModel(model.apiIdentifier),
-    system: systemPrompt,
+    system: persona.systemPrompt,
     messages: coreMessages,
     maxSteps: 5,
     experimental_activeTools: allTools,
