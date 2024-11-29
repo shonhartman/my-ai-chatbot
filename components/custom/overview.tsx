@@ -1,9 +1,14 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 
-import { MessageIcon, VercelIcon } from './icons';
+import { Persona } from '@/lib/personas';
+// import { MessageIcon, VercelIcon } from './icons';
 
-export const Overview = () => {
+interface OverviewProps {
+  persona: Persona;
+}
+
+export const Overview = ({ persona }: OverviewProps) => {
   return (
     <motion.div
       key="overview"
@@ -14,37 +19,12 @@ export const Overview = () => {
       transition={{ delay: 0.5 }}
     >
       <div className="rounded-xl p-6 flex flex-col gap-8 leading-relaxed text-center max-w-xl">
-        <p className="flex flex-row justify-center gap-4 items-center">
-          <VercelIcon size={32} />
-          <span>+</span>
-          <MessageIcon size={32} />
-        </p>
+        <div className="flex flex-col gap-4 items-center">
+          <h2 className="text-2xl font-bold">{persona.name}</h2>
+          <p className="text-muted-foreground">{persona.description}</p>
+        </div>
         <p>
-          This is an{' '}
-          <Link
-            className="font-medium underline underline-offset-4"
-            href="https://github.com/vercel/ai-chatbot"
-            target="_blank"
-          >
-            open source
-          </Link>{' '}
-          chatbot template built with Next.js and the AI SDK by Vercel. It uses
-          the{' '}
-          <code className="rounded-md bg-muted px-1 py-0.5">streamText</code>{' '}
-          function in the server and the{' '}
-          <code className="rounded-md bg-muted px-1 py-0.5">useChat</code> hook
-          on the client to create a seamless chat experience.
-        </p>
-        <p>
-          You can learn more about the AI SDK by visiting the{' '}
-          <Link
-            className="font-medium underline underline-offset-4"
-            href="https://sdk.vercel.ai/docs"
-            target="_blank"
-          >
-            docs
-          </Link>
-          .
+          Start a conversation with {persona.name} by typing a message below.
         </p>
       </div>
     </motion.div>

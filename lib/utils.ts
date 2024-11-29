@@ -51,6 +51,8 @@ export function generateUUID(): string {
   });
 }
 
+// Takes a tool message and a list of chat messages, and updates any matching tool invocations
+// in the chat messages with their results from the tool message. Returns the updated messages.
 function addToolMessageToChat({
   toolMessage,
   messages,
@@ -84,6 +86,9 @@ function addToolMessageToChat({
   });
 }
 
+// Converts messages from the database format into a format suitable for the UI.
+// Handles both simple text messages and complex messages that may contain tool calls.
+// For tool messages, it updates the corresponding tool invocations with their results.
 export function convertToUIMessages(
   messages: Array<DBMessage>
 ): Array<Message> {

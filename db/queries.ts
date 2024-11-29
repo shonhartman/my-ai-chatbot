@@ -93,6 +93,7 @@ export async function getChatsByUserId({ id }: { id: string }) {
   }
 }
 
+// Retrieves a single chat from the database by its ID
 export async function getChatById({ id }: { id: string }) {
   try {
     const [selectedChat] = await db.select().from(chat).where(eq(chat.id, id));
@@ -112,6 +113,7 @@ export async function saveMessages({ messages }: { messages: Array<Message> }) {
   }
 }
 
+// Gets all messages for a specific chat, ordered from oldest to newest
 export async function getMessagesByChatId({ id }: { id: string }) {
   try {
     return await db

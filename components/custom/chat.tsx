@@ -11,12 +11,14 @@ import { ChatHeader } from '@/components/custom/chat-header';
 import { PreviewMessage, ThinkingMessage } from '@/components/custom/message';
 import { useScrollToBottom } from '@/components/custom/use-scroll-to-bottom';
 import { Vote } from '@/db/schema';
+import { getPersonaById } from '@/lib/personas';
 import { fetcher } from '@/lib/utils';
 
 import { Block, UIBlock } from './block';
 import { BlockStreamHandler } from './block-stream-handler';
 import { MultimodalInput } from './multimodal-input';
 import { Overview } from './overview';
+
 
 export function Chat({
   id,
@@ -31,6 +33,9 @@ export function Chat({
 }) {
   const { mutate } = useSWRConfig();
 
+  // Initialize chat functionality with messages, input handling, and streaming data
+  // Uses the useChat hook to manage the chat state and interactions with the AI model
+  // Updates chat history when messages are complete
   const {
     messages,
     setMessages,
@@ -76,6 +81,8 @@ export function Chat({
 
   const [attachments, setAttachments] = useState<Array<Attachment>>([]);
 
+  const persona = getPersonaById(personaId);
+
   return (
     <>
       <div className="flex flex-col min-w-0 h-dvh bg-background">
@@ -84,7 +91,7 @@ export function Chat({
           ref={messagesContainerRef}
           className="flex flex-col min-w-0 gap-6 flex-1 overflow-y-scroll pt-4"
         >
-          {messages.length === 0 && <Overview />}
+          {messages.length === 0 && persona && <Overview persona={persona} />}
 
           {messages.map((message, index) => (
             <PreviewMessage
