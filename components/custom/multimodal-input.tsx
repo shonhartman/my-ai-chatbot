@@ -15,6 +15,7 @@ import React, {
 import { toast } from 'sonner';
 import { useLocalStorage, useWindowSize } from 'usehooks-ts';
 
+import { getPersonaById } from '@/lib/personas';
 import { sanitizeUIMessages } from '@/lib/utils';
 
 import { ArrowUpIcon, PaperclipIcon, StopIcon } from './icons';
@@ -22,18 +23,6 @@ import { PreviewAttachment } from './preview-attachment';
 import { Button } from '../ui/button';
 import { Textarea } from '../ui/textarea';
 
-const suggestedActions = [
-  {
-    title: 'What is the weather',
-    label: 'in San Francisco?',
-    action: 'What is the weather in San Francisco?',
-  },
-  {
-    title: 'Help me draft an essay',
-    label: 'about Silicon Valley',
-    action: 'Help me draft a short essay about Silicon Valley',
-  },
-];
 
 export function MultimodalInput({
   chatId,
@@ -48,6 +37,7 @@ export function MultimodalInput({
   append,
   handleSubmit,
   className,
+  personaId,
 }: {
   chatId: string;
   input: string;
@@ -69,6 +59,7 @@ export function MultimodalInput({
     chatRequestOptions?: ChatRequestOptions
   ) => void;
   className?: string;
+  personaId: string;
 }) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { width } = useWindowSize();
@@ -190,6 +181,9 @@ export function MultimodalInput({
     },
     [setAttachments]
   );
+
+  const persona = getPersonaById(personaId);
+  const suggestedActions = persona?.suggestedActions || [];
 
   return (
     <div className="relative w-full flex flex-col gap-4">

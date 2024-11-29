@@ -134,6 +134,7 @@ export function Chat({
             messages={messages}
             setMessages={setMessages}
             append={append}
+            personaId={personaId}
           />
         </form>
       </div>

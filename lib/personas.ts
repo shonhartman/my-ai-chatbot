@@ -12,6 +12,11 @@ export interface Persona {
     style_exaggeration?: number;
     speaker_boost?: number;
   };
+  suggestedActions: Array<{
+    title: string;
+    label: string;
+    action: string;
+  }>;
 }
 
 export const personas: Persona[] = [
@@ -25,7 +30,19 @@ export const personas: Persona[] = [
       stability: 0.5,
       similarity_boost: 0.75,
       style_exaggeration: 0.40
-    }
+    },
+    suggestedActions: [
+      {
+        title: "Leadership advice",
+        label: "for managing creative teams",
+        action: "What's your advice on leading and managing creative teams effectively?",
+      },
+      {
+        title: "Tell me about",
+        label: "your biggest business challenge",
+        action: "What was your biggest challenge as Disney CEO and how did you overcome it?",
+      },
+    ]
   },
   {
     id: 'estherPerel',
@@ -36,7 +53,19 @@ export const personas: Persona[] = [
     voiceSettings: {
       stability: 0.6,
       similarity_boost: 0.75
-    }
+    },
+    suggestedActions: [
+      {
+        title: "Help me understand",
+        label: "workplace relationships",
+        action: "How can I build better relationships with my colleagues at work?",
+      },
+      {
+        title: "Advice on",
+        label: "maintaining boundaries",
+        action: "What are some effective ways to set and maintain healthy boundaries in relationships?",
+      },
+    ]
   }
 ];
 
