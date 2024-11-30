@@ -22,27 +22,33 @@ export function VoiceMessage({
     
     setIsLoading(true);
     try {
-      // Format message with emotional context
-      const formattedMessage = formatMessageWithEmotion(
-        message.content as string, 
+      const formattedMessage = formatMessageWithEmotion(message.content as string);
+
+      const chunkSize = 200;
+      const textChunks = [];
+      for (let i = 0; i < formattedMessage.length; i += chunkSize) {
+        textChunks.push(formattedMessage.slice(i, i + chunkSize));
+      }
+
+      const audioBuffers = await Promise.all(
+        textChunks.map(async (chunk) => {
+          const response = await fetch('/api/voice', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              text: chunk,
+              voiceId: persona.voiceId,
+              voiceSettings: persona.voiceSettings
+            }),
+          });
+
+          if (!response.ok) throw new Error('Failed to generate speech');
+          return response.arrayBuffer();
+        })
       );
 
-      const response = await fetch('/api/voice', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          text: formattedMessage,
-          voiceId: persona.voiceId,
-          voiceSettings: persona.voiceSettings
-        }),
-      });
-
-      if (!response.ok) throw new Error('Failed to generate speech');
-
-      const audioBlob = await response.blob();
-      const audioUrl = URL.createObjectURL(audioBlob);
+      const concatenatedAudio = new Blob(audioBuffers, { type: 'audio/mpeg' });
+      const audioUrl = URL.createObjectURL(concatenatedAudio);
       const newAudio = new Audio(audioUrl);
       
       setAudio(newAudio);

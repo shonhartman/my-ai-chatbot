@@ -1,4 +1,4 @@
-import { bobIgerPrompt, estherPerelPrompt } from './prompts';
+import { bobIgerPrompt, estherPerelPrompt, annaWintourPrompt } from './prompts';
 
 export interface Persona {
   id: string;
@@ -64,6 +64,30 @@ export const personas: Persona[] = [
         title: "Advice on",
         label: "maintaining boundaries",
         action: "What are some effective ways to set and maintain healthy boundaries in relationships?",
+      },
+    ]
+  },
+  {
+    id: "annaWintour",
+    name: "Anna Wintour",
+    description: "Legendary Editor-in-Chief of Vogue and Condé Nast's Global Chief Content Officer",
+    voiceId: "nfInqtgNYW3VgUdiZ0Rf",
+    systemPrompt: annaWintourPrompt,
+    voiceSettings: {
+      stability: 0.55,
+      similarity_boost: 0.75,
+      style_exaggeration: 0.35
+    },
+    suggestedActions: [
+      {
+        title: "Insights on",
+        label: "fashion industry trends",
+        action: "What do you see as the most significant trends shaping the fashion industry today?",
+      },
+      {
+        title: "Advice about",
+        label: "leadership in media",
+        action: "What qualities do you look for in emerging talent and future leaders in media?",
       },
     ]
   }
