@@ -34,14 +34,14 @@ export function PersonaSelection() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center p-4">
-      <h1 className="text-2xl font-bold mb-8">Choose Your Conversation Partner</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl">
+    <div className="flex min-h-screen flex-col p-4">
+      <h1 className="text-2xl font-bold mb-8 px-4">Choose Your Conversation Partner</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
         {personas.map((persona) => (
           <button
             key={persona.id}
             onClick={() => startChat(persona.id)}
-            className="flex flex-col p-6 bg-card rounded-xl border hover:border-primary transition-colors"
+            className="flex flex-col p-6 bg-card rounded-xl border hover:border-primary transition-colors text-left"
           >
             <h2 className="text-xl font-semibold mb-2">{persona.name}</h2>
             <p className="text-muted-foreground text-sm mb-4">
