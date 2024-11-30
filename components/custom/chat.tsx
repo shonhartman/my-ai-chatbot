@@ -143,6 +143,7 @@ export function Chat({
         {block && block.isVisible && (
           <Block
             chatId={id}
+            personaId={personaId}
             input={input}
             setInput={setInput}
             handleSubmit={handleSubmit}
