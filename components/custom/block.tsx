@@ -45,6 +45,32 @@ export interface UIBlock {
   };
 }
 
+interface BlockProps {
+  chatId: string;
+  input: string;
+  setInput: (input: string) => void;
+  isLoading: boolean;
+  stop: () => void;
+  attachments: Array<Attachment>;
+  setAttachments: Dispatch<SetStateAction<Array<Attachment>>>;
+  block: UIBlock;
+  setBlock: Dispatch<SetStateAction<UIBlock>>;
+  messages: Array<Message>;
+  setMessages: Dispatch<SetStateAction<Array<Message>>>;
+  votes: Array<Vote> | undefined;
+  personaId: string;
+  append: (
+    message: Message | CreateMessage,
+    chatRequestOptions?: ChatRequestOptions
+  ) => Promise<string | null | undefined>;
+  handleSubmit: (
+    event?: {
+      preventDefault?: () => void;
+    },
+    chatRequestOptions?: ChatRequestOptions
+  ) => void;
+}
+
 export function Block({
   chatId,
   input,
@@ -61,31 +87,7 @@ export function Block({
   setMessages,
   votes,
   personaId,
-}: {
-  chatId: string;
-  input: string;
-  setInput: (input: string) => void;
-  isLoading: boolean;
-  stop: () => void;
-  attachments: Array<Attachment>;
-  setAttachments: Dispatch<SetStateAction<Array<Attachment>>>;
-  block: UIBlock;
-  setBlock: Dispatch<SetStateAction<UIBlock>>;
-  messages: Array<Message>;
-  setMessages: Dispatch<SetStateAction<Array<Message>>>;
-  votes: Array<Vote> | undefined;
-  personaId?: string;
-  append: (
-    message: Message | CreateMessage,
-    chatRequestOptions?: ChatRequestOptions
-  ) => Promise<string | null | undefined>;
-  handleSubmit: (
-    event?: {
-      preventDefault?: () => void;
-    },
-    chatRequestOptions?: ChatRequestOptions
-  ) => void;
-}) {
+}: BlockProps) {
   const [messagesContainerRef, messagesEndRef] =
     useScrollToBottom<HTMLDivElement>();
 
@@ -329,6 +331,7 @@ export function Block({
                 append={append}
                 className="bg-background dark:bg-muted"
                 setMessages={setMessages}
+                personaId={personaId}
               />
             </form>
           </div>
