@@ -85,58 +85,76 @@ export function Chat({
 
   return (
     <>
-      <div className="flex flex-col min-w-0 h-dvh bg-background">
-        <ChatHeader selectedModelId={selectedModelId} />
-        <div
-          ref={messagesContainerRef}
-          className="flex flex-col min-w-0 gap-6 flex-1 overflow-y-scroll pt-4"
+      <div className="flex flex-col min-w-0 h-dvh bg-background relative">
+        <div 
+          className="absolute inset-0 z-0"
+          style={{
+            backgroundImage: `url('/images/${personaId}_BG.jpg')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'left',
+          }}
         >
-          {messages.length === 0 && persona && <Overview persona={persona} />}
-
-          {messages.map((message, index) => (
-            <PreviewMessage
-              key={message.id}
-              chatId={id}
-              message={message}
-              block={block}
-              setBlock={setBlock}
-              isLoading={isLoading && messages.length - 1 === index}
-              vote={
-                votes
-                  ? votes.find((vote) => vote.messageId === message.id)
-                  : undefined
-              }
-              personaId={personaId}
-            />
-          ))}
-
-          {isLoading &&
-            messages.length > 0 &&
-            messages[messages.length - 1].role === 'user' && (
-              <ThinkingMessage />
-            )}
-
-          <div
-            ref={messagesEndRef}
-            className="shrink-0 min-w-[24px] min-h-[24px]"
+          <div 
+            className="absolute inset-0"
+            style={{
+              background: 'linear-gradient(to right, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.9) 50%)',
+            }}
           />
         </div>
-        <form className="flex mx-auto px-4 bg-background pb-4 md:pb-6 gap-2 w-full md:max-w-3xl">
-          <MultimodalInput
-            chatId={id}
-            input={input}
-            setInput={setInput}
-            handleSubmit={handleSubmit}
-            isLoading={isLoading}
-            stop={stop}
-            attachments={attachments}
-            setAttachments={setAttachments}
-            messages={messages}
-            setMessages={setMessages}
-            append={append}
-            personaId={personaId}
-          />
-        </form>
+
+        <div className="relative z-10 flex flex-col min-w-0 h-full ml-auto" style={{ maxWidth: '65%' }}>
+          <ChatHeader selectedModelId={selectedModelId} />
+          <div
+            ref={messagesContainerRef}
+            className="flex flex-col min-w-0 gap-6 flex-1 overflow-y-scroll pt-4"
+          >
+            {messages.length === 0 && persona && <Overview persona={persona} />}
+
+            {messages.map((message, index) => (
+              <PreviewMessage
+                key={message.id}
+                chatId={id}
+                message={message}
+                block={block}
+                setBlock={setBlock}
+                isLoading={isLoading && messages.length - 1 === index}
+                vote={
+                  votes
+                    ? votes.find((vote) => vote.messageId === message.id)
+                    : undefined
+                }
+                personaId={personaId}
+              />
+            ))}
+
+            {isLoading &&
+              messages.length > 0 &&
+              messages[messages.length - 1].role === 'user' && (
+                <ThinkingMessage />
+              )}
+
+            <div
+              ref={messagesEndRef}
+              className="shrink-0 min-w-[24px] min-h-[24px]"
+            />
+          </div>
+          <form className="flex mx-auto px-4 bg-background/50 backdrop-blur-sm pb-4 md:pb-6 gap-2 w-full md:max-w-3xl">
+            <MultimodalInput
+              chatId={id}
+              input={input}
+              setInput={setInput}
+              handleSubmit={handleSubmit}
+              isLoading={isLoading}
+              stop={stop}
+              attachments={attachments}
+              setAttachments={setAttachments}
+              messages={messages}
+              setMessages={setMessages}
+              append={append}
+              personaId={personaId}
+            />
+          </form>
+        </div>
       </div>
 
       <AnimatePresence>
