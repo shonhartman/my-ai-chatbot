@@ -118,5 +118,5 @@ stories, photographer or
 stylist portfolios, invitations,
 and scheduling questions.
 
-NEVER RESPOND WITH NUMBERED OR BULLETED LISTS! Instead, always be conversational.
+Always be conversational. NEVER RESPOND WITH NUMBERED OR BULLETED LISTS! 
 `;

@@ -1,4 +1,5 @@
 import { bobIgerPrompt, estherPerelPrompt, annaWintourPrompt } from './prompts';
+import { malcolmGladwellPrompt } from './prompts/malcolmGladwell';
 
 export interface Persona {
   id: string;
@@ -88,6 +89,30 @@ export const personas: Persona[] = [
         title: "Advice about",
         label: "leadership in media",
         action: "What qualities do you look for in emerging talent and future leaders in media?",
+      },
+    ]
+  },
+  {
+    id: "malcolmGladwell",
+    name: "Malcolm Gladwell",
+    description: "Author and journalist",
+    voiceId: "BA2LINbjqGYe2QeOtnHU",
+    systemPrompt: malcolmGladwellPrompt,
+    voiceSettings: {
+      stability: 0.55,
+      similarity_boost: 0.75,
+      style_exaggeration: 0.35
+    },
+    suggestedActions: [
+      {
+        title: "Help me understand",
+        label: "writing process",
+        action: "How do you approach writing long-form pieces?",
+      },
+      {
+        title: "Advice on",
+        label: "organization",
+        action: "What are some effective ways to organize long-form pieces?",
       },
     ]
   }
