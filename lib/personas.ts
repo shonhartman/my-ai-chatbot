@@ -1,4 +1,5 @@
 import { bobIgerPrompt, estherPerelPrompt, annaWintourPrompt } from './prompts';
+import { davidLynchPrompt } from './prompts/davidLynch';
 import { malcolmGladwellPrompt } from './prompts/malcolmGladwell';
 
 export interface Persona {
@@ -28,9 +29,9 @@ export const personas: Persona[] = [
     voiceId: "GPa2GzTlGg6laXLnA7s9",
     systemPrompt: bobIgerPrompt,
     voiceSettings: {
-      stability: 0.5,
-      similarity_boost: 0.75,
-      style_exaggeration: 0.40
+      stability: 0.37,
+      similarity_boost: 0.69,
+      style_exaggeration: 0.47
     },
     suggestedActions: [
       {
@@ -52,8 +53,9 @@ export const personas: Persona[] = [
     voiceId: 'WSX1aldzf8Ji9vw4FJA6',
     systemPrompt: estherPerelPrompt,
     voiceSettings: {
-      stability: 0.6,
-      similarity_boost: 0.75
+      stability: 0.37,
+      similarity_boost: 0.69,
+      style_exaggeration: 0.47
     },
     suggestedActions: [
       {
@@ -75,9 +77,9 @@ export const personas: Persona[] = [
     voiceId: "nfInqtgNYW3VgUdiZ0Rf",
     systemPrompt: annaWintourPrompt,
     voiceSettings: {
-      stability: 0.55,
-      similarity_boost: 0.75,
-      style_exaggeration: 0.35
+      stability: 0.37,
+      similarity_boost: 0.69,
+      style_exaggeration: 0.47
     },
     suggestedActions: [
       {
@@ -99,9 +101,9 @@ export const personas: Persona[] = [
     voiceId: "BA2LINbjqGYe2QeOtnHU",
     systemPrompt: malcolmGladwellPrompt,
     voiceSettings: {
-      stability: 0.55,
-      similarity_boost: 0.75,
-      style_exaggeration: 0.35
+      stability: 0.37,
+      similarity_boost: 0.69,
+      style_exaggeration: 0.47
     },
     suggestedActions: [
       {
@@ -113,6 +115,30 @@ export const personas: Persona[] = [
         title: "Advice on",
         label: "organization",
         action: "What are some effective ways to organize long-form pieces?",
+      },
+    ]
+  },
+  {
+    id: "davidLynch",
+    name: "David Lynch",
+    description: "Director of the cult classic film 'Twin Peaks'",
+    voiceId: "2rnYhioKxgw6EW3gT9B8",
+    systemPrompt: davidLynchPrompt,
+    voiceSettings: {
+      stability: 0.37,
+      similarity_boost: 0.69,
+      style_exaggeration: 0.47
+    },
+    suggestedActions: [
+      {
+        title: "Explore the surreal",
+        label: "creative flow",
+        action: "How do you dive into the flow of ideas and let them shape your work?",
+      },
+      {
+        title: "Unlock inspiration",
+        label: "finding ideas",
+        action: "What are your methods for catching and nurturing fleeting ideas into full stories?",
       },
     ]
   }
