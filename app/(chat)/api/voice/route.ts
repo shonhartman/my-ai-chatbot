@@ -1,19 +1,21 @@
 import { auth } from '@/app/(auth)/auth';
 
 export async function POST(request: Request) {
-  const session = await auth();
-
-  if (!session || !session.user) {
-    return new Response('Unauthorized', { status: 401 });
-  }
-
-  const { text, voiceId } = await request.json();
-
-  if (!text || !voiceId) {
-    return new Response('Missing required fields', { status: 400 });
-  }
-
   try {
+    const session = await auth();
+
+    if (!session?.user?.id) {
+      console.log('Voice API: Unauthorized - No valid session');
+      return new Response('Unauthorized - Please log in again', { status: 401 });
+    }
+
+    const { text, voiceId, voiceSettings } = await request.json();
+
+    if (!text || !voiceId) {
+      console.log('Voice API: Missing required fields', { text, voiceId });
+      return new Response('Missing required fields', { status: 400 });
+    }
+
     // 1. Chunking the text
     const chunkSize = 200; // Adjust this value based on your needs and testing
     const textChunks = [];
@@ -23,32 +25,38 @@ export async function POST(request: Request) {
 
     // 2. Sending requests for each chunk
     const audioBuffers = await Promise.all(
-      textChunks.map(async (chunk) => {
-        const response = await fetch(
-          `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}/stream?optimize_streaming_latency=3&output_format=mp3_22050_32`, // Using stream endpoint and optimizing for latency
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'xi-api-key': process.env.ELEVENLABS_API_KEY!,
-            },
-            body: JSON.stringify({
-              text: chunk,
-              model_id: 'eleven_multilingual_v2',
-              voice_settings: {
-                stability: 0.4, // Experiment with lower values
-                similarity_boost: 0.75, // Experiment with lower values
+      textChunks.map(async (chunk, index) => {
+        try {
+          const response = await fetch(
+            `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}/stream?optimize_streaming_latency=3&output_format=mp3_22050_32`,
+            {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'xi-api-key': process.env.ELEVENLABS_API_KEY!,
               },
-              apply_text_normalization: 'off', // Try turning this off
-            }),
+              body: JSON.stringify({
+                text: chunk,
+                model_id: 'eleven_multilingual_v2',
+                voice_settings: voiceSettings || {
+                  stability: 0.4,
+                  similarity_boost: 0.75,
+                },
+                apply_text_normalization: 'off',
+              }),
+            }
+          );
+
+          if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`ElevenLabs API error (${response.status}): ${errorText}`);
           }
-        );
 
-        if (!response.ok) {
-          throw new Error('Failed to generate speech');
+          return response.arrayBuffer();
+        } catch (error) {
+          console.error(`Error processing chunk ${index}:`, error);
+          throw error;
         }
-
-        return response.arrayBuffer();
       })
     );
 
@@ -61,7 +69,16 @@ export async function POST(request: Request) {
       },
     });
   } catch (error) {
-    console.error('Error generating speech:', error);
-    return new Response('Error generating speech', { status: 500 });
+    console.error('Voice API error:', error);
+    return new Response(
+      JSON.stringify({ 
+        error: 'Error generating speech', 
+        details: error instanceof Error ? error.message : 'Unknown error'
+      }), 
+      { 
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
   }
 }
